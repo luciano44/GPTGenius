@@ -1,0 +1,22 @@
+.floating {
+  position: relative;
+  animation: floating 1s infinite alternate-reverse ease-in-out;
+}
+
+@keyframes floating {
+  from {
+    top: -5px;
+  }
+  to {
+    top: 5px;
+  }
+}
+
+.get-started svg {
+  width: 0px;
+  transition: 0.15s;
+}
+
+.get-started:hover svg {
+  width: 14px;
+}
