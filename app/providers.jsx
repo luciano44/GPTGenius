@@ -19,7 +19,7 @@ const Providers = ({ children }) => {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <Toaster position="bottom-right" />
+        <Toaster />
         {children}
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
