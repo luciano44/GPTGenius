@@ -1,0 +1,23 @@
+import TourInfo from "@/components/TourInfo";
+import { getSingleTour } from "@/utils/action";
+import { redirect } from "next/navigation";
+import Link from "next/link";
+
+const SingleTourPage = async ({ params }) => {
+  const tour = await getSingleTour(params.id);
+
+  if (!tour) redirect("/tours");
+
+  return (
+    <div>
+      <Link href="/tours" className="btn btn-primary mb-12">
+        back to tours
+      </Link>
+      <TourInfo tour={tour} />
+    </div>
+  );
+};
+
+// export const dynamic = "force-dynamic";
+
+export default SingleTourPage;
