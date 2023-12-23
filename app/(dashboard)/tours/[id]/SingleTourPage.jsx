@@ -4,21 +4,12 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { generateTourImage } from "@/utils/action";
 import Image from "next/image";
-// import tourImage from "@/public/image.webp";
-import axios from "axios";
-const url = `https://api.unsplash.com/search/photos?client_id=${process.env.UNSPLASH_API_KEY}&query=`;
 
-const SingleTourPage = async ({ params }) => {
+export const SingleTourPage = async ({ params }) => {
   const tour = await getSingleTour(params.id);
   if (!tour) redirect("/tours");
 
-  // const tourImage = await generateTourImage({
-  //   city: tour.city,
-  //   country: tour.country,
-  // });
-
-  const { data } = await axios.get(`${url}${tour.city}`);
-  const tourImage = await data?.results[0]?.urls?.raw;
+  const tourImage = await generateTourImage(tour);
 
   return (
     <div>
@@ -41,7 +32,3 @@ const SingleTourPage = async ({ params }) => {
     </div>
   );
 };
-
-// export const dynamic = "force-dynamic";
-
-export default SingleTourPage;
