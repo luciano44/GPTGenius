@@ -8,7 +8,7 @@ const themes = {
 };
 
 const ThemeToggle = () => {
-  const [theme, setTheme] = useState(themes.winter);
+  const [theme, setTheme] = useState(themes.dracula);
 
   const toggleTheme = () => {
     const newTheme = theme === themes.winter ? themes.dracula : themes.winter;
