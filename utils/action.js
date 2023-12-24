@@ -1,6 +1,7 @@
 "use server";
 import OpenAI from "openai";
 import prisma from "./db";
+import { revalidatePath } from "next/cache";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -18,6 +19,7 @@ export const generateChatResponse = async (chatMessages) => {
       ],
       model: "gpt-3.5-turbo",
       temperature: 0,
+      max_tokens: 100,
     });
 
     console.log(response.choices[0].message);
@@ -127,4 +129,47 @@ export const generateTourImage = async ({ city, country }) => {
   } catch (error) {
     return null;
   }
+};
+
+export const fetchUserTokensById = async (clerkId) => {
+  const res = await prisma.token.tokens.findUnique({
+    where: {
+      clerkId,
+    },
+  });
+
+  return res?.tokens;
+};
+
+export const generateUserTokensForId = async (clerkId) => {
+  const res = await prisma.token.create({
+    data: {
+      clerkId,
+    },
+  });
+
+  return result?.tokens;
+};
+
+export const fetchOrGenerateTokens = async (clerkId) => {
+  const userTokens = await fetchUserTokensById(clerkId);
+  if (userTokens) return userTokens.tokens;
+
+  return (await generateUserTokensForId(clerkId)).tokens;
+};
+
+export const subtractTokens = async (clerkId, tokens) => {
+  const res = await prisma.token.update({
+    where: {
+      clerkId,
+    },
+    data: {
+      tokens: {
+        decrement: tokens,
+      },
+    },
+  });
+  revalidatePath("/profile");
+
+  return res.tokens;
 };
