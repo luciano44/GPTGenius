@@ -25,7 +25,10 @@ export const generateChatResponse = async (chatMessages) => {
     console.log(response.choices[0].message);
     console.log(response);
 
-    return response.choices[0].message;
+    return {
+      message: response.choices[0].message,
+      tokens: response.usage.total_tokens,
+    };
   } catch (error) {
     console.log(error);
     return null;
@@ -53,7 +56,7 @@ Once you have a list, create a one-day tour. Response should be  in the followin
     "country": "${country}",
     "title": "title of the tour",
     "description": "short description of the city and tour",
-    "stops": ["short paragraph on the stop 1 ", "short paragraph on the stop 2","short paragraph on the stop 3"]
+    "stops": ["stop name","stop name","stop name"]
   }
 }
 "stops" property should include only three stops.
@@ -72,7 +75,7 @@ If you can't find info on exact ${city}, or ${city} does not exist, or it's popu
     const tourData = JSON.parse(response.choices[0].message.content);
     if (!tourData.tour) return null;
 
-    return tourData.tour;
+    return { tour: tourData.tour, tokens: response.usage.total_tokens };
   } catch (error) {
     console.log(error);
     return null;
@@ -132,7 +135,7 @@ export const generateTourImage = async ({ city, country }) => {
 };
 
 export const fetchUserTokensById = async (clerkId) => {
-  const res = await prisma.token.tokens.findUnique({
+  const res = await prisma.token.findUnique({
     where: {
       clerkId,
     },
@@ -148,7 +151,7 @@ export const generateUserTokensForId = async (clerkId) => {
     },
   });
 
-  return result?.tokens;
+  return res?.tokens;
 };
 
 export const fetchOrGenerateTokens = async (clerkId) => {

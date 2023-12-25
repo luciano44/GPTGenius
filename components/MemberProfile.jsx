@@ -1,8 +1,11 @@
+import { fetchOrGenerateTokens } from "@/utils/action";
 import { UserButton, auth, currentUser } from "@clerk/nextjs";
 
 const MemberProfile = async () => {
   const user = await currentUser();
   const { userId } = auth();
+
+  await fetchOrGenerateTokens(userId);
 
   const email = user.emailAddresses[0].emailAddress;
 
